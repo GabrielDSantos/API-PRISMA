@@ -7,6 +7,7 @@ type Student = {
   age: number;
   weight: number;
   height: number;
+  password: string;
 };
 
 async function seed() {
@@ -20,6 +21,7 @@ async function seed() {
           age: student.age,
           weight: student.weight,
           height: student.height,
+          password: student.password,
         },
       });
     })
@@ -40,6 +42,7 @@ function getStudent(): Array<Student> {
       age: 18,
       weight: 60.9,
       height: 1.6,
+      password: "test",
     },
     {
       name: "Gabriel",
@@ -48,6 +51,7 @@ function getStudent(): Array<Student> {
       age: 19,
       weight: 70.0,
       height: 1.81,
+      password: "test",
     },
     {
       name: "Kevin",
@@ -56,6 +60,7 @@ function getStudent(): Array<Student> {
       age: 19,
       weight: 63.9,
       height: 1.7,
+      password: "test",
     },
   ];
 }

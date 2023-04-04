@@ -1,4 +1,5 @@
 import { db } from "../utils/db.server";
+import bcrypt from "bcrypt";
 
 type Student = {
   id: number;
@@ -8,6 +9,7 @@ type Student = {
   email: string;
   weight: number;
   height: number;
+  password: string;
 };
 
 export const listStudents = async (): Promise<Student[]> => {
@@ -20,6 +22,7 @@ export const listStudents = async (): Promise<Student[]> => {
       email: true,
       weight: true,
       height: true,
+      password: true,
     },
   });
 };
@@ -37,6 +40,7 @@ export const getStudent = async (id: number): Promise<Student | null> => {
       email: true,
       weight: true,
       height: true,
+      password: true,
     },
   });
 };
@@ -44,7 +48,8 @@ export const getStudent = async (id: number): Promise<Student | null> => {
 export const createStudent = async (
   student: Omit<Student, "id">
 ): Promise<Student> => {
-  const { name, lastName, email, age, weight, height } = student;
+  const { name, lastName, email, age, weight, height, password } = student;
+
   return db.students.create({
     data: {
       name,
@@ -53,6 +58,7 @@ export const createStudent = async (
       email,
       weight,
       height,
+      password,
     },
     select: {
       id: true,
@@ -62,6 +68,7 @@ export const createStudent = async (
       email: true,
       weight: true,
       height: true,
+      password: true,
     },
   });
 };
@@ -70,7 +77,7 @@ export const updateStudent = async (
   student: Omit<Student, "id">,
   id: number
 ): Promise<Student> => {
-  const { name, lastName, email, age, weight, height } = student;
+  const { name, lastName, email, age, weight, height, password } = student;
   return db.students.update({
     where: {
       id,
@@ -82,6 +89,7 @@ export const updateStudent = async (
       email,
       weight,
       height,
+      password,
     },
     select: {
       id: true,
@@ -91,6 +99,7 @@ export const updateStudent = async (
       email: true,
       weight: true,
       height: true,
+      password: true,
     },
   });
 };
@@ -99,6 +108,30 @@ export const deleteStudent = async (id: number): Promise<void> => {
   await db.students.delete({
     where: {
       id,
+    },
+  });
+};
+
+export const updatePassword = async (
+  password: string,
+  id: number
+): Promise<Student> => {
+  return db.students.update({
+    where: {
+      id,
+    },
+    data: {
+      password,
+    },
+    select: {
+      id: true,
+      name: true,
+      lastName: true,
+      age: true,
+      email: true,
+      weight: true,
+      height: true,
+      password: true,
     },
   });
 };

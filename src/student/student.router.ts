@@ -1,6 +1,7 @@
 import express, { response } from "express";
 import type { Request, Response } from "express";
 import { body, validationResult } from "express-validator";
+import bcrypt from "bcrypt";
 
 import * as StudentService from "./student.service";
 
@@ -40,13 +41,24 @@ studentRouter.post(
   body("email").isString(),
   body("weight").isFloat(),
   body("height").isFloat(),
+  body("password").isString(),
   async (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
       return response.status(400).json({ errors: errors.array() });
     }
     try {
-      const student = request.body;
+      var studentPassword = await bcrypt.hash(request.body.password, 8);
+      console.log(studentPassword);
+      const student = {
+        name: request.body.name,
+        lastName: request.body.lastName,
+        email: request.body.email,
+        age: request.body.age,
+        weight: request.body.weight,
+        height: request.body.height,
+        password: studentPassword,
+      };
       const newStudent = await StudentService.createStudent(student);
       return response.status(201).json(newStudent);
     } catch (error: any) {
@@ -56,14 +68,14 @@ studentRouter.post(
 );
 // PUT : Update an student
 // Params: name, lastName, age, email, weight, height
-studentRouter.put(
+studentRouter.patch(
   "/:id",
-  body("name").isString(),
-  body("lastName").isString(),
-  body("age").isNumeric(),
-  body("email").isString(),
-  body("weight").isFloat(),
-  body("height").isFloat(),
+  body("name").isString().optional(),
+  body("lastName").isString().optional(),
+  body("age").isNumeric().optional(),
+  body("email").isString().optional(),
+  body("weight").isFloat().optional(),
+  body("height").isFloat().optional(),
   async (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
@@ -90,3 +102,25 @@ studentRouter.delete("/:id", async (request: Request, response: Response) => {
     return response.status(500).json(error.message);
   }
 });
+
+studentRouter.patch(
+  "/:id/pass",
+  body("currentPassword").isString(),
+  body("newPassword").isString(),
+  async (request: Request, response: Response) => {
+    const id: number = parseInt(request.params.id, 10);
+    const { currentPassword, newPassword } = request.body;
+    try {
+      const student = await StudentService.getStudent(id);
+      if (bcrypt.compareSync(currentPassword, student!.password)) {
+        const newHash = await bcrypt.hash(newPassword, 8);
+        const updatedStudent = await StudentService.updatePassword(newHash, id);
+        return response.status(200).json(updatedStudent);
+      } else {
+        throw new Error("Invalid password.");
+      }
+    } catch (error: any) {
+      return response.status(500).json(error.message);
+    }
+  }
+);
