@@ -39,6 +39,6 @@ model Teacher {
 
 model Subject {
   id      Int       @id @default(autoincrement())
-  name    String
+  name    String 
   teacher Teacher[]
 }

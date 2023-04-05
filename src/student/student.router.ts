@@ -49,7 +49,6 @@ studentRouter.post(
     }
     try {
       var studentPassword = await bcrypt.hash(request.body.password, 8);
-      console.log(studentPassword);
       const student = {
         name: request.body.name,
         lastName: request.body.lastName,

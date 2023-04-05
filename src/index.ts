@@ -3,6 +3,8 @@ import express from "express";
 import cors from "cors";
 
 import { studentRouter } from "./student/student.router";
+import { subjectRouter } from "./subject/subject.router";
+import { teacherRouter } from "./teacher/teacher.router";
 
 dotenv.config();
 
@@ -17,6 +19,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/students", studentRouter);
+app.use("/subjects", subjectRouter);
+app.use("/teachers", teacherRouter);
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
