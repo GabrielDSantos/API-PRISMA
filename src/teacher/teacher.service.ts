@@ -54,3 +54,70 @@ export const deleteTeacher = async (id: number): Promise<void> => {
       },
     });
   };
+
+
+  export const getTeacher = async (id: number): Promise<Teacher | null> => {
+    return db.teacher.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        name: true,
+        lastName: true,
+        email: true,
+        password: true,
+        subjectId: true,
+      },
+    });
+  };
+
+
+  export const updateTeacher = async (
+    teacher: Omit<Teacher, "id">,
+    id: number
+  ): Promise<Teacher> => {
+    const { name, lastName, email, subjectId } = teacher;
+    return db.teacher.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+        lastName,
+        email,
+        subjectId
+      },
+      select: {
+        id: true,
+        name: true,
+        lastName: true,
+        email: true,
+        password: true,
+        subjectId: true
+      },
+    });
+  };
+
+  export const updatePassword = async (
+    password: string,
+    id: number
+  ): Promise<Teacher> => {
+    return db.teacher.update({
+      where: {
+        id,
+      },
+      data: {
+        password,
+      },
+      select: {
+        id: true,
+        name: true,
+        lastName: true,
+        email: true,
+        password: true,
+        subjectId: true,
+      },
+    });
+  };
+  

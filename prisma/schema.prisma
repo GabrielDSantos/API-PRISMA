@@ -11,17 +11,18 @@ datasource db {
 }
 
 model Students {
-  id        Int       @id @default(autoincrement())
-  name      String
-  lastName  String
-  email     String    @unique
-  password  String
-  age       Int
-  weight    Float
-  height    Float
-  teachers  Teacher[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id         Int       @id @default(autoincrement())
+  name       String
+  lastName   String
+  email      String    @unique
+  password   String
+  age        Int
+  weight     Float
+  height     Float
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  Classrom   Classrom? @relation(fields: [classromId], references: [id])
+  classromId Int?
 }
 
 model Teacher {
@@ -30,15 +31,26 @@ model Teacher {
   lastName  String
   email     String     @unique
   password  String
-  students  Students[]
   Subject   Subject?   @relation(fields: [subjectId], references: [id])
   subjectId Int?
+  classroms Classrom[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 }
 
 model Subject {
-  id      Int       @id @default(autoincrement())
-  name    String 
-  teacher Teacher[]
+  id        Int       @id @default(autoincrement())
+  name      String
+  teacher   Teacher[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Classrom {
+  id        Int        @id @default(autoincrement())
+  className String
+  students  Students[]
+  teachers  Teacher[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }

@@ -18,6 +18,7 @@ studentRouter.get("/", async (request: Request, response: Response) => {
 });
 
 // GET: a single student by ID
+
 studentRouter.get("/:id", async (request: Request, response: Response) => {
   const id: number = parseInt(request.params.id, 10);
   try {
@@ -32,7 +33,7 @@ studentRouter.get("/:id", async (request: Request, response: Response) => {
 });
 
 // POST : Create a new student
-// Params: name, lastName, age, email, weight, height
+// Params: name, lastName, age, email, weight, height, password
 studentRouter.post(
   "/",
   body("name").isString(),
@@ -42,6 +43,7 @@ studentRouter.post(
   body("weight").isFloat(),
   body("height").isFloat(),
   body("password").isString(),
+  body("classromId").isNumeric(),
   async (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
@@ -57,6 +59,7 @@ studentRouter.post(
         weight: request.body.weight,
         height: request.body.height,
         password: studentPassword,
+        classromId : request.body.classromId
       };
       const newStudent = await StudentService.createStudent(student);
       return response.status(201).json(newStudent);
@@ -66,7 +69,6 @@ studentRouter.post(
   }
 );
 // PUT : Update an student
-// Params: name, lastName, age, email, weight, height
 studentRouter.patch(
   "/:id",
   body("name").isString().optional(),
@@ -92,6 +94,7 @@ studentRouter.patch(
 );
 
 // DELETE : Delete an student based on the id
+
 studentRouter.delete("/:id", async (request: Request, response: Response) => {
   const id: number = parseInt(request.params.id, 10);
   try {
@@ -101,6 +104,8 @@ studentRouter.delete("/:id", async (request: Request, response: Response) => {
     return response.status(500).json(error.message);
   }
 });
+
+// Patch : Update a student password
 
 studentRouter.patch(
   "/:id/pass",

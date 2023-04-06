@@ -9,7 +9,8 @@ type Student = {
   email: string;
   weight: number;
   height: number;
-  password: string;
+  password: string ;
+  classromId: number | null;
 };
 
 export const listStudents = async (): Promise<Student[]> => {
@@ -23,6 +24,12 @@ export const listStudents = async (): Promise<Student[]> => {
       weight: true,
       height: true,
       password: true,
+      classromId: true,
+      Classrom: {
+        select: {
+          className: true,
+        },
+      },
     },
   });
 };
@@ -41,6 +48,12 @@ export const getStudent = async (id: number): Promise<Student | null> => {
       weight: true,
       height: true,
       password: true,
+      classromId: true,
+      Classrom: {
+        select: {
+          className: true,
+        },
+      },
     },
   });
 };
@@ -48,7 +61,8 @@ export const getStudent = async (id: number): Promise<Student | null> => {
 export const createStudent = async (
   student: Omit<Student, "id">
 ): Promise<Student> => {
-  const { name, lastName, email, age, weight, height, password } = student;
+  const { name, lastName, email, age, weight, height, password, classromId } =
+    student;
 
   return db.students.create({
     data: {
@@ -59,6 +73,7 @@ export const createStudent = async (
       weight,
       height,
       password,
+      classromId,
     },
     select: {
       id: true,
@@ -69,6 +84,12 @@ export const createStudent = async (
       weight: true,
       height: true,
       password: true,
+      classromId: true,
+      Classrom: {
+        select: {
+          className: true,
+        },
+      },
     },
   });
 };
@@ -77,7 +98,7 @@ export const updateStudent = async (
   student: Omit<Student, "id">,
   id: number
 ): Promise<Student> => {
-  const { name, lastName, email, age, weight, height, password } = student;
+  const { name, lastName, email, age, weight, height, classromId } = student;
   return db.students.update({
     where: {
       id,
@@ -89,7 +110,7 @@ export const updateStudent = async (
       email,
       weight,
       height,
-      password,
+      classromId,
     },
     select: {
       id: true,
@@ -100,10 +121,15 @@ export const updateStudent = async (
       weight: true,
       height: true,
       password: true,
+      classromId: true,
+      Classrom: {
+        select: {
+          className: true,
+        },
+      },
     },
   });
 };
-
 export const deleteStudent = async (id: number): Promise<void> => {
   await db.students.delete({
     where: {
@@ -132,6 +158,12 @@ export const updatePassword = async (
       weight: true,
       height: true,
       password: true,
+      classromId: true,
+      Classrom: {
+        select: {
+          className: true,
+        },
+      },
     },
   });
 };
