@@ -26,16 +26,16 @@ model Students {
 }
 
 model Teacher {
-  id        Int        @id @default(autoincrement())
+  id        Int                 @id @default(autoincrement())
   name      String
   lastName  String
-  email     String     @unique
+  email     String              @unique
   password  String
-  Subject   Subject?   @relation(fields: [subjectId], references: [id])
-  subjectId Int?
+  subject   Subject            @relation(fields: [subjectId], references: [id])
+  subjectId Int
   classroms Classrom[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
 }
 
 model Subject {
@@ -47,10 +47,11 @@ model Subject {
 }
 
 model Classrom {
-  id        Int        @id @default(autoincrement())
+  id        Int                 @id @default(autoincrement())
   className String
   students  Students[]
   teachers  Teacher[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
 }
+

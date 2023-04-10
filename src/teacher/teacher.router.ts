@@ -1,6 +1,6 @@
 import express, { response } from "express";
 import type { Request, Response } from "express";
-import { body, validationResult } from "express-validator";
+import { body, check, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 
 import * as TeacherService from "./teacher.service";
@@ -28,6 +28,8 @@ teacherRouter.post(
   body("email").isString(),
   body("password").isString(),
   body("subjectId").isNumeric(),
+  body("classromId").isArray(),
+  check("classromId.*").isNumeric(),
   async (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
@@ -41,6 +43,7 @@ teacherRouter.post(
         email: request.body.email,
         subjectId: request.body.subjectId,
         password: teacherPassword,
+        classromId : request.body.classromId,
       };
       const newTeacher = await TeacherService.createTeacher(teacher);
       return response.status(201).json(newTeacher);

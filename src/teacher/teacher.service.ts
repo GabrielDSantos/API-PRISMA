@@ -7,42 +7,38 @@ type Teacher = {
   lastName: string;
   email: string;
   password: string;
-  subjectId: number | null;
+  subjectId: number;
+  classromId? : number[]
 };
 
 export const listTeachers = async (): Promise<Teacher[]> => {
   return db.teacher.findMany({
-    select: {
-      id: true,
-      name: true,
-      lastName: true,
-      email: true,
-      password: true,
-      subjectId: true,
-    },
+    include:{
+      subject: true,
+      classroms: true,
+    }
   });
 };
 
 export const createTeacher = async (
     teacher: Omit<Teacher, "id">
   ): Promise<Teacher> => {
-    const { name, lastName, email, password, subjectId } = teacher;
+    const { name, lastName, email, password, subjectId, classromId } = teacher;
+    const classromListCreator = classromId!.map((classromId) => {return {id : classromId}})
   
-    return db.teacher.create({
+  
+     return db.teacher.create({
       data: {
         name,
         lastName,
         email,
         password,
-        subjectId,
+      classroms:{
+        connect: classromListCreator
       },
-      select: {
-        id: true,
-        name: true,
-        lastName: true,
-        email: true,
-        password: true,
-        subjectId: true,
+      subject:{
+        connect:{id: subjectId}
+      }
       },
     });
   }; 

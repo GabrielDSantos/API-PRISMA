@@ -20,6 +20,7 @@ classromRouter.get("/", async (request: Request, response: Response) => {
 classromRouter.post(
     "/",
     body("className").isString(),
+    body("teacherId").isNumeric(),
   async (request: Request, response: Response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {

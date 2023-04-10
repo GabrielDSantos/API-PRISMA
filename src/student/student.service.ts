@@ -1,5 +1,4 @@
 import { db } from "../utils/db.server";
-import bcrypt from "bcrypt";
 
 type Student = {
   id: number;
